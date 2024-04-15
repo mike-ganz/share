@@ -1,110 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Orderly Sharing</title>
-
-<!-- Open Graph metadata for image preview -->
-<meta property="og:title" id="og-title" content="Your Website Title"> <!-- Dynamically set using JavaScript -->
-<meta property="og:description" content="Description of your website or content">
-<meta property="og:image" id="og-image" content=""> <!-- Dynamically set using JavaScript -->
-<meta property="og:url" content="https://your-website.com">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="Your Website Name">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check it out on Orderly!</title>
+    <meta property="og:title" content="Check it out on Orderly!" />
+    <meta property="og:image" content="https://www.joinorderly.com/assets/images/image06.jpg?v=4e219e81" />
 </head>
 <body>
-<h1 id="item-name" style="display: none;"></h1>
-<img id="item-image" src="" alt="Item Image" style="display: none;">
-<p id="device-type"></p>
-<p id="os-type"></p>
-
-<script>
-function getQueryParams() {
-    const params = new URLSearchParams(window.location.search);
-    return {
-        image_url: params.get('image_url'),
-        item_name: params.get('item_name')
-    };
-}
-
-function detectDeviceType() {
-    const userAgent = navigator.userAgent;
-    if (/mobile/i.test(userAgent)) {
-        return 'Mobile';
-    } else if (/iPad|tablet/i.test(userAgent)) {
-        return 'Tablet';
-    } else {
-        return 'Desktop';
-    }
-}
-
-function detectOS() {
-    const userAgent = navigator.userAgent;
-    if (/android/i.test(userAgent)) {
-        return 'Android';
-    } else if (/iPad|iPhone|iPod/.test(userAgent)) {
-        return 'iOS';
-    } else {
-        return 'Other';
-    }
-}
-
-function redirectToURL(osType) {
-    setTimeout(function() {
-        if (osType === 'iOS') {
-            window.location.href = 'https://apps.apple.com/us/app/orderly-returns-assistant/id6452804073';
-        } else if (osType === 'Android') {
-            window.location.href = 'https://play.google.com/store/apps/details?id=com.orderly.android';
-        } else {
-            window.location.href = 'https://www.joinorderly.com';
+    <script>
+        function redirectBasedOnOS() {
+            var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+                window.location.replace("https://apps.apple.com/us/app/orderly-returns-assistant/id6452804073");
+            } else if (/android/i.test(userAgent)) {
+                window.location.replace("https://play.google.com/store/apps/details?id=com.orderly.android");
+            } else {
+                window.location.replace("https://www.joinorderly.com");
+            }
         }
-    }, 2000); // 2 seconds delay
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    const { image_url, item_name } = getQueryParams();
-
-    // Set item name
-    if (item_name) {
-        document.getElementById('item-name').textContent = item_name;
-        document.getElementById('item-name').style.display = 'block';
-
-        // Set page title dynamically
-        document.title = item_name;
-
-        // Set Open Graph title dynamically
-        document.getElementById('og-title').content = item_name;
-    }
-
-    // Set image source
-    if (image_url) {
-        const itemImage = document.getElementById('item-image');
-        itemImage.src = image_url;
-        itemImage.style.display = 'block';
-
-        // Set Open Graph image dynamically
-        document.getElementById('og-image').content = image_url;
-    }
-
-    const osType = detectOS();
-    document.getElementById('device-type').textContent = `Device Type: ${detectDeviceType()}`;
-    document.getElementById('os-type').textContent = `Operating System: ${osType}`;
-    // redirectToURL(osType);
-
-    // Debugging for image and item name loading
-    if (image_url) {
-        console.log('Image URL is present:', image_url);
-    } else {
-        console.log('Image URL is not present or empty');
-    }
-    if (item_name) {
-        console.log('Item Name is present:', item_name);
-    } else {
-        console.log('Item Name is not present or empty');
-    }
-});
-</script>
+        redirectBasedOnOS();
+    </script>
 </body>
 </html>
