@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Display Item</title>
+</head>
+<body>
+<h1 id="item-name" style="display: none;"></h1>
+<img id="item-image" src="" alt="Item Image" style="display: none;">
+<p id="device-type"></p>
+
+<script>
+function getQueryParams() {
+    const params = new URLSearchParams(window.location.search);
+    return {
+        image_url: params.get('image_url'),
+        item_name: params.get('item_name')
+    };
+}
+
+function detectDeviceType() {
+    const userAgent = navigator.userAgent;
+    if (/mobile/i.test(userAgent)) {
+        return 'Mobile';
+    } else if (/iPad|tablet/i.test(userAgent)) {
+        return 'Tablet';
+    } else {
+        return 'Desktop';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const { image_url, item_name } = getQueryParams();
+    if (item_name) {
+        const itemNameElement = document.getElementById('item-name');
+        itemNameElement.textContent = item_name;
+        itemNameElement.style.display = 'block';
+    }
+    if (image_url) {
+        const itemImageElement = document.getElementById('item-image');
+        itemImageElement.src = image_url;
+        itemImageElement.style.display = 'block';
+    }
+    document.getElementById('device-type').textContent = `Device Type: ${detectDeviceType()}`;
+});
+</script>
+</body>
+</html>
