@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Device Type and OS Detection</title>
+<title>OS Based Redirection</title>
 </head>
 <body>
 <h1 id="item-name" style="display: none;"></h1>
@@ -38,24 +38,27 @@ function detectOS() {
     } else if (/iPad|iPhone|iPod/.test(userAgent)) {
         return 'iOS';
     } else {
-        return 'Unknown OS';
+        return 'Other';
     }
 }
 
+function redirectToURL(osType) {
+    setTimeout(function() {
+        if (osType === 'iOS') {
+            window.location.href = 'https://apps.apple.com/us/app/orderly-returns-assistant/id6452804073';
+        } else if (osType === 'Android') {
+            window.location.href = 'https://play.google.com/store/apps/details?id=com.orderly.android';
+        } else {
+            window.location.href = 'https://www.joinorderly.com';
+        }
+    }, 2000); // 2 seconds delay
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-    const { image_url, item_name } = getQueryParams();
-    if (item_name) {
-        const itemNameElement = document.getElementById('item-name');
-        itemNameElement.textContent = item_name;
-        itemNameElement.style.display = 'block';
-    }
-    if (image_url) {
-        const itemImageElement = document.getElementById('item-image');
-        itemImageElement.src = image_url;
-        itemImageElement.style.display = 'block';
-    }
+    const osType = detectOS();
     document.getElementById('device-type').textContent = `Device Type: ${detectDeviceType()}`;
-    document.getElementById('os-type').textContent = `Operating System: ${detectOS()}`;
+    document.getElementById('os-type').textContent = `Operating System: ${osType}`;
+    redirectToURL(osType);
 });
 </script>
 </body>
