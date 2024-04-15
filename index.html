@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OS Based Redirection</title>
+<title>Orderly Sharing</title>
 
 <!-- Open Graph metadata for image preview -->
 <meta property="og:title" id="og-title" content="Your Website Title"> <!-- Dynamically set using JavaScript -->
@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const osType = detectOS();
     document.getElementById('device-type').textContent = `Device Type: ${detectDeviceType()}`;
     document.getElementById('os-type').textContent = `Operating System: ${osType}`;
-    redirectToURL(osType);
+    // redirectToURL(osType);
 
     // Debugging for image and item name loading
     if (image_url) {
