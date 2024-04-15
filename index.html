@@ -56,8 +56,18 @@ function redirectToURL(osType) {
 
 document.addEventListener('DOMContentLoaded', () => {
     const { image_url, item_name } = getQueryParams();
-    console.log('Image URL:', image_url);
-    console.log('Item Name:', item_name);
+
+    // Set item name
+    if (item_name) {
+        document.getElementById('item-name').textContent = item_name;
+        document.getElementById('item-name').style.display = 'block';
+    }
+
+    // Set image source
+    if (image_url) {
+        document.getElementById('item-image').src = image_url;
+        document.getElementById('item-image').style.display = 'block';
+    }
 
     const osType = detectOS();
     document.getElementById('device-type').textContent = `Device Type: ${detectDeviceType()}`;
