@@ -3,12 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Display Item</title>
+<title>Device Type and OS Detection</title>
 </head>
 <body>
 <h1 id="item-name" style="display: none;"></h1>
 <img id="item-image" src="" alt="Item Image" style="display: none;">
 <p id="device-type"></p>
+<p id="os-type"></p>
 
 <script>
 function getQueryParams() {
@@ -30,6 +31,17 @@ function detectDeviceType() {
     }
 }
 
+function detectOS() {
+    const userAgent = navigator.userAgent;
+    if (/android/i.test(userAgent)) {
+        return 'Android';
+    } else if (/iPad|iPhone|iPod/.test(userAgent)) {
+        return 'iOS';
+    } else {
+        return 'Unknown OS';
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const { image_url, item_name } = getQueryParams();
     if (item_name) {
@@ -43,6 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
         itemImageElement.style.display = 'block';
     }
     document.getElementById('device-type').textContent = `Device Type: ${detectDeviceType()}`;
+    document.getElementById('os-type').textContent = `Operating System: ${detectOS()}`;
 });
 </script>
 </body>
