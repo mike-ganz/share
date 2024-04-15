@@ -4,12 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OS Based Redirection</title>
+
+<!-- Open Graph metadata for image preview -->
+<meta property="og:title" id="og-title" content="Your Website Title"> <!-- Dynamically set using JavaScript -->
+<meta property="og:description" content="Description of your website or content">
+<meta property="og:image" id="og-image" content=""> <!-- Dynamically set using JavaScript -->
+<meta property="og:url" content="https://your-website.com">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Your Website Name">
+
 </head>
 <body>
-<img id="item-image" src="" alt="Item Image" style="display: none;">
 <h1 id="item-name" style="display: none;"></h1>
-<!-- <p id="device-type"></p>
-<p id="os-type"></p> -->
+<img id="item-image" src="" alt="Item Image" style="display: none;">
+<p id="device-type"></p>
+<p id="os-type"></p>
 
 <script>
 function getQueryParams() {
@@ -61,18 +70,28 @@ document.addEventListener('DOMContentLoaded', () => {
     if (item_name) {
         document.getElementById('item-name').textContent = item_name;
         document.getElementById('item-name').style.display = 'block';
+
+        // Set page title dynamically
+        document.title = item_name;
+
+        // Set Open Graph title dynamically
+        document.getElementById('og-title').content = item_name;
     }
 
     // Set image source
     if (image_url) {
-        document.getElementById('item-image').src = image_url;
-        document.getElementById('item-image').style.display = 'block';
+        const itemImage = document.getElementById('item-image');
+        itemImage.src = image_url;
+        itemImage.style.display = 'block';
+
+        // Set Open Graph image dynamically
+        document.getElementById('og-image').content = image_url;
     }
 
     const osType = detectOS();
     document.getElementById('device-type').textContent = `Device Type: ${detectDeviceType()}`;
     document.getElementById('os-type').textContent = `Operating System: ${osType}`;
-    // redirectToURL(osType);
+    redirectToURL(osType);
 
     // Debugging for image and item name loading
     if (image_url) {
