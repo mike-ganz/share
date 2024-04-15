@@ -55,10 +55,26 @@ function redirectToURL(osType) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    const { image_url, item_name } = getQueryParams();
+    console.log('Image URL:', image_url);
+    console.log('Item Name:', item_name);
+
     const osType = detectOS();
     document.getElementById('device-type').textContent = `Device Type: ${detectDeviceType()}`;
     document.getElementById('os-type').textContent = `Operating System: ${osType}`;
     redirectToURL(osType);
+
+    // Debugging for image and item name loading
+    if (image_url) {
+        console.log('Image URL is present:', image_url);
+    } else {
+        console.log('Image URL is not present or empty');
+    }
+    if (item_name) {
+        console.log('Item Name is present:', item_name);
+    } else {
+        console.log('Item Name is not present or empty');
+    }
 });
 </script>
 </body>
