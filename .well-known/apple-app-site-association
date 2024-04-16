@@ -7,7 +7,7 @@
             "components": [
                 {
                     "/": "*",
-                    "comment": "Matches any URL??"
+                    "comment": "Matches any URL"
                 },
                 {
                     "#": "no_universal_links",
@@ -25,7 +25,7 @@
                 },
                 {
                     "/": "/help/*",
-                    "?": { "articleNumber": "????" },
+                    "?": { "articleNumber": "" },
                     "comment": "Matches any URL whose path starts with /help/ and which has a query item with name 'articleNumber' and a value of exactly 4 characters"
                 }
             ]
