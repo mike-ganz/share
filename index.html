@@ -19,6 +19,7 @@
             const path = currentUrl.pathname.slice(1); // Remove the leading "/"
             const searchParams = new URLSearchParams(currentUrl.search);
 
+            // Construct deep link URL
             let deepLink = baseDeepLink;
             if (path) {
                 deepLink += path; // Add path to base deep link
@@ -27,22 +28,28 @@
                 }
             }
 
-            // Navigate to the deep link
-            window.location = deepLink;
+            // Navigate to the deep link if path is provided
+            if (path) {
+                window.location = deepLink;
+                checkFallback();
+            } else {
+                // No path provided, go directly to a fallback URL based on user agent
+                checkFallback();
+            }
+        }
 
+        function checkFallback() {
             setTimeout(function() {
-                if (!document.hasFocus()) {
-                    // Check the platform and redirect accordingly
-                    var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-                    if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-                        window.location = url1; // iOS devices
-                    } else if (/Mac/i.test(userAgent)) {
-                        window.location = url1; // Mac OS
-                    } else if (/android/i.test(userAgent)) {
-                        window.location = url2; // Android devices
-                    } else {
-                        window.location = url3; // Other devices
-                    }
+                // Check the platform and redirect accordingly
+                var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+                if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+                    window.location = url1; // iOS devices
+                } else if (/Mac/i.test(userAgent)) {
+                    window.location = url1; // Mac OS
+                } else if (/android/i.test(userAgent)) {
+                    window.location = url2; // Android devices
+                } else {
+                    window.location = url3; // Other devices
                 }
             }, 2000);
         }
