@@ -8,39 +8,30 @@
 <body>
     <script>
         function openLink() {
-            // Base deep link
+            // Base deep link and fallback URLs
             const baseDeepLink = 'orderly://';
             const url1 = 'https://apps.apple.com/us/app/orderly-returns-assistant/id6452804073'; // For iOS and Mac
             const url2 = 'https://play.google.com/store/apps/details?id=com.orderly.android&pli=1'; // For Android
             const url3 = 'https://www.joinorderly.com'; // For Others
-
-            // Get current URL
+            
+            // Get current URL components
             const currentUrl = new URL(window.location.href);
             const path = currentUrl.pathname.slice(1); // Remove the leading "/"
-            const searchParams = new URLSearchParams(currentUrl.search);
+            const searchParams = currentUrl.search;
 
-            // Construct deep link URL
-            let deepLink = baseDeepLink;
-            if (path) {
-                deepLink += path; // Add path to base deep link
-                if (Array.from(searchParams).length > 0) {
-                    deepLink += '?' + searchParams; // Add query parameters if any
-                }
-            }
+            // Construct the deep link with path and parameters, if available
+            const deepLink = baseDeepLink + (path ? path + searchParams : '');
 
-            // Navigate to the deep link if path is provided
-            if (path) {
-                window.location = deepLink;
-                checkFallback();
-            } else {
-                // No path provided, go directly to a fallback URL based on user agent
-                checkFallback();
-            }
-        }
+            // Try to open the deep link
+            window.location = deepLink;
 
-        function checkFallback() {
             setTimeout(function() {
-                // Check the platform and redirect accordingly
+                // Check if the deep link did not open within 500 milliseconds
+                if (!document.hasFocus()) {
+                    return;
+                }
+
+                // Detecting the platform
                 var userAgent = navigator.userAgent || navigator.vendor || window.opera;
                 if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
                     window.location = url1; // iOS devices
@@ -51,9 +42,10 @@
                 } else {
                     window.location = url3; // Other devices
                 }
-            }, 2000);
+            }, 500);
         }
 
+        // Run on load
         window.onload = openLink;
     </script>
 </body>
