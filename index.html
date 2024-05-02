@@ -3,27 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Orderly Redirect</title>
+    <title>Orderly Redirecet</title>
 </head>
 <body>
     <script>
         function openLink() {
-            // Base deep link and fallback URLs
-            const baseDeepLink = 'orderly://';
-            const url1 = 'https://apps.apple.com/us/app/orderly-returns-assistant/id6452804073'; // For iOS and Mac
-            const url2 = 'https://play.google.com/store/apps/details?id=com.orderly.android&pli=1'; // For Android
-            const url3 = 'https://www.joinorderly.com'; // For Others
-            
-            // Get current URL components
-            const currentUrl = new URL(window.location.href);
-            const path = currentUrl.pathname.slice(1); // Remove the leading "/"
-            const searchParams = currentUrl.search;
+            const baseUrl = 'orderly://';
+            const params = new URLSearchParams(window.location.search);
+            const path = params.get('path');
+            const additionalParams = params.toString().replace(`path=${path}&`, '').replace(`path=${path}`, '');
 
-            // Construct the deep link with path and parameters, if available
-            const deepLink = baseDeepLink + (path ? path + searchParams : '');
+            const deepLink = baseUrl + (path ? path + (additionalParams ? '?' + additionalParams : '') : '');
 
-            // Try to open the deep link
-            window.location = deepLink;
+            window.location.href = deepLink;
 
             setTimeout(function() {
                 // Check if the deep link did not open within 500 milliseconds
@@ -31,21 +23,20 @@
                     return;
                 }
 
-                // Detecting the platform
+                // Detecting the platform for fallback
                 var userAgent = navigator.userAgent || navigator.vendor || window.opera;
                 if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-                    window.location = url1; // iOS devices
+                    window.location.href = 'https://apps.apple.com/us/app/orderly-returns-assistant/id6452804073'; // iOS devices
                 } else if (/Mac/i.test(userAgent)) {
-                    window.location = url1; // Mac OS
+                    window.location.href = 'https://apps.apple.com/us/app/orderly-returns-assistant/id6452804073'; // Mac OS
                 } else if (/android/i.test(userAgent)) {
-                    window.location = url2; // Android devices
+                    window.location.href = 'https://play.google.com/store/apps/details?id=com.orderly.android&pli=1'; // Android devices
                 } else {
-                    window.location = url3; // Other devices
+                    window.location.href = 'https://www.joinorderly.com'; // Other devices
                 }
             }, 500);
         }
 
-        // Run on load
         window.onload = openLink;
     </script>
 </body>
