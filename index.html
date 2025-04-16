@@ -23,35 +23,42 @@
 </head>
 <body>
     <script>
-    function openLink() {
-        const baseUrl = 'orderly://';
-        const params = new URLSearchParams(window.location.search);
-        const path = params.get('path');
-        const additionalParams = params.toString().replace(`path=${path}&`, '').replace(`path=${path}`, '');
+        const ua = navigator.userAgent || navigator.vendor;
+        const isAndroid = /android/i.test(ua);
+        const isiOS = /iPad|iPhone|iPod/.test(ua);
 
-        const deepLink = baseUrl + (path ? path + (additionalParams ? '?' + additionalParams : '') : '');
+        function doRedirect() {
+            const baseUrl = 'orderly://';
+            const params = new URLSearchParams(window.location.search);
+            const path = params.get('path');
+            const additionalParams = params.toString().replace(`path=${path}&`, '').replace(`path=${path}`, '');
+            const deepLink = baseUrl + (path ? path + (additionalParams ? '?' + additionalParams : '') : '');
 
-        window.location.replace(deepLink);
+            window.location.href = deepLink;
 
-        setTimeout(function () {
-            if (!document.hasFocus()) return;
+            setTimeout(() => {
+                if (isiOS) {
+                    window.location.href = 'https://apps.apple.com/us/app/orderly-returns-assistant/id6452804073';
+                } else if (isAndroid) {
+                    const intentUri = `intent://${path || ''}${additionalParams ? '?' + additionalParams : ''}#Intent;scheme=orderly;package=com.orderly.android;end`;
+                    window.location.href = intentUri;
+                } else {
+                    window.location.href = 'https://apps.apple.com/us/app/orderly-returns-assistant/id6452804073';
+                }
+            }, 500);
+        }
 
-            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-
-            if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-                window.location.href = 'https://apps.apple.com/us/app/orderly-returns-assistant/id6452804073';
-            } else if (/android/i.test(userAgent)) {
-                const intentUri = `intent://${path || ''}${additionalParams ? '?' + additionalParams : ''}#Intent;scheme=orderly;package=com.orderly.android;end`;
-                window.location.href = intentUri;
-            } else if (/Mac/i.test(userAgent)) {
-                window.location.href = 'https://apps.apple.com/us/app/orderly-returns-assistant/id6452804073';
-            } else {
-                window.location.href = 'https://apps.apple.com/us/app/orderly-returns-assistant/id6452804073';
-            }
-        }, 500);
-    }
-
-    window.onload = openLink;
-</script>
+        if (isAndroid) {
+            document.write(`
+                <div style="display: flex; align-items: center; justify-content: center; height: 100vh;">
+                    <button onclick="doRedirect()" style="padding: 1em 2em; font-size: 1.2em;">
+                        Tap to open Orderly
+                    </button>
+                </div>
+            `);
+        } else {
+            window.onload = doRedirect;
+        }
+    </script>
 </body>
 </html>
