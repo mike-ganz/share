@@ -4,7 +4,7 @@
     "details": [
       {
         "appID": "2827YJCYFQ.com.orderly.ios",
-        "paths": [ "/path/*" ]
+        "paths": [ "/**" ]
       }
     ]
   }
