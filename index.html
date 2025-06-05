@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Orderly - Returns Assistant</title>
+    <title>Orderly - Track Every Order</title>
     <link rel="icon" type="image/png" href="images/orderly_icon_white_square.png">
     
     <!-- Global Site Tag (gtag.js) - Google Analytics -->
@@ -12,7 +12,6 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-
       gtag('config', 'AW-16502156015');
     </script>
 
@@ -22,33 +21,52 @@
     </script>
 </head>
 <body>
-    <script>
+<script>
+    function openDeepLinkViaIframe(url) {
+        const iframe = document.createElement("iframe");
+        iframe.style.display = "none";
+        iframe.src = url;
+        document.body.appendChild(iframe);
+        setTimeout(() => {
+            document.body.removeChild(iframe);
+        }, 1000);
+    }
+
     function openLink() {
         const baseUrl = 'orderly://';
         const params = new URLSearchParams(window.location.search);
         const path = params.get('path');
         const additionalParams = params.toString().replace(`path=${path}&`, '').replace(`path=${path}`, '');
-
         const deepLink = baseUrl + (path ? path + (additionalParams ? '?' + additionalParams : '') : '');
 
-        window.location.replace(deepLink);
+        const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+        const isiOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
+        const isAndroid = /android/i.test(userAgent);
+        const isMac = /Mac/i.test(userAgent);
+
+        let didHide = false;
+        document.addEventListener("visibilitychange", function () {
+            if (document.hidden) didHide = true;
+        });
+
+        if (isiOS) {
+            openDeepLinkViaIframe(deepLink);
+        } else {
+            window.location.replace(deepLink);
+        }
 
         setTimeout(function () {
-            if (!document.hasFocus()) return;
+            if (didHide) return;
 
-            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-
-            if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+            if (isiOS || isMac) {
                 window.location.href = 'https://apps.apple.com/us/app/orderly-returns-assistant/id6452804073';
-            } else if (/android/i.test(userAgent)) {
+            } else if (isAndroid) {
                 const intentUri = `intent://${path || ''}${additionalParams ? '?' + additionalParams : ''}#Intent;scheme=orderly;package=com.orderly.android;end`;
                 window.location.href = intentUri;
-            } else if (/Mac/i.test(userAgent)) {
-                window.location.href = 'https://apps.apple.com/us/app/orderly-returns-assistant/id6452804073';
             } else {
                 window.location.href = 'https://apps.apple.com/us/app/orderly-returns-assistant/id6452804073';
             }
-        }, 500);
+        }, 1000);
     }
 
     window.onload = openLink;
