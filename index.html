@@ -58,7 +58,7 @@
         setTimeout(function () {
             if (didHide) return;
 
-            if (isiOS || isMac) {
+            if (isiOS) {
                 window.location.href = 'https://apps.apple.com/us/app/orderly-returns-assistant/id6452804073';
             } else if (isAndroid) {
                 const intentUri = `intent://${path || ''}${additionalParams ? '?' + additionalParams : ''}#Intent;scheme=orderly;package=com.orderly.android;end`;
